@@ -1,0 +1,61 @@
+body {
+  font-family: 'Quicksand', sans-serif;
+  background-color: #fdfbf7;
+  overflow: hidden;
+}
+.font-serif-elegant {
+  font-family: 'Playfair Display', serif;
+}
+.glass {
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.petal {
+  position: absolute;
+  pointer-events: none;
+  animation: fall linear forwards;
+}
+@keyframes fall {
+  0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+}
+.star {
+  position: absolute;
+  background-color: white;
+  border-radius: 50%;
+  animation: pulse 2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 1; }
+}
+.fade-in {
+  animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.polaroid {
+  transition: transform 0.3s ease;
+}
+.polaroid:nth-child(1) { transform: rotate(-5deg); }
+.polaroid:nth-child(2) { transform: rotate(3deg); }
+.polaroid:nth-child(3) { transform: rotate(-3deg); }
+.polaroid:hover {
+  transform: scale(1.05) rotate(0deg) !important;
+  z-index: 10;
+}
+.heart-particle {
+  position: absolute;
+  pointer-events: none;
+  animation: flyUp 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+@keyframes flyUp {
+  0% { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(1.5); opacity: 0; }
+}
