@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Girlfriend Day 🌻</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/chome.css">
+  
+  <style>
+    /* Mengaktifkan Font Global */
+    body {
+      font-family: 'Quicksand', sans-serif;
+    }
+    .font-serif-elegant {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Efek Kaca Transparan Berlapis Emosi Malam & Bunga Matahari */
+    .glass-box {
+      background: rgba(15, 23, 42, 0.65); /* Slate malam gelap semi-transparan */
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(245, 158, 11, 0.25); /* Garis emas matahari tipis */
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+
+    /* Karakter Mengambang */
+    #helper-character {
+      position: fixed;
+      font-size: 2.8rem;
+      z-index: 100;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      animation: floatAnimation 3s ease-in-out infinite;
+    }
+    #helper-character:active {
+      cursor: grabbing;
+    }
+    @keyframes floatAnimation {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    /* Animasi Karakter Melompat */
+    .char-jump {
+      animation: charJumpAnimation 0.4s ease-in-out;
+    }
+    @keyframes charJumpAnimation {
+      0%, 100% { transform: scale(1); }
+      50% { transform: translateY(-20px) scale(1.15); }
+    }
+
+    /* Efek Partikel Hati */
+    .char-heart {
+      position: absolute;
+      pointer-events: none;
+      font-size: 1.2rem;
+      animation: heartPop 0.8s ease-out forwards;
+      z-index: 110;
+    }
+    @keyframes heartPop {
+      0% { transform: translate(0, 0) scale(0.5); opacity: 1; }
+      100% { transform: translate(var(--mx), var(--my)) scale(1.2); opacity: 0; }
+    }
+
+    /* Modifikasi scrollbar kotak pesan akhir agar estetik */
+    .custom-scroll::-webkit-scrollbar {
+      width: 5px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: rgba(245, 158, 11, 0.4);
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="relative min-h-screen flex items-center justify-center p-4 overflow-hidden bg-[#070b19]">
+
+  <div class="absolute inset-0 bg-gradient-to-b from-[#070b19] via-[#0b1528] to-[#1c1a3a] pointer-events-none z-0"></div>
+  <div id="stars-ambient" class="absolute inset-0 opacity-40 pointer-events-none z-0 bg-[radial-gradient(white_1px,transparent_0)] bg-[size:24px_24px]"></div>
+
+  <div id="helper-character" style="left: 20px; top: 75vh;">🥰</div>
+
+  <audio id="bgMusic" loop>
+    <source src="assets/music/jura.mp3" type="audio/mpeg">
+  </audio>
+
+  <div id="petals-container" class="absolute inset-0 overflow-hidden pointer-events-none z-50"></div>
+
+  <div id="page1" class="absolute inset-0 bg-[#050814] flex flex-col items-center justify-center text-white px-6 z-40 transition-opacity duration-1000">
+    <div class="text-center space-y-6 z-10 max-w-lg">
+      <p id="p1-text1" class="text-2xl md:text-3xl font-serif-elegant font-light text-amber-200">Hai Princess...</p>
+      <p id="p1-text2" class="text-base md:text-lg font-light text-rose-300">Ada sesuatu yang ingin aku tunjukkan.</p>
+      
+      <div id="p1-intro-words" class="max-w-md mx-auto text-sm md:text-base text-gray-200 leading-relaxed bg-white/5 p-6 rounded-2xl border border-amber-500/20 backdrop-blur-md italic shadow-xl">
+        "Selamat Hari Girlfriend ya, sayang. 🤍 Makasih ya udah hadir dan bikin hari-hariku lebih berwarna. Semoga aku bisa terus jadi orang yang bikin kamu ngerasa aman, dihargai, dan bahagia. Walaupun hari ini belum bisa ngasih hadiah yang spesial, semoga doa dan usahaku buat bahagiain kamu pelan-pelan jadi hadiah terbaik. 🤍🌻"
+      </div>
+      
+      <button onclick="triggerCharacter(this, () => startJourney())" class="mt-8 px-8 py-3.5 bg-gradient-to-r from-amber-400 via-yellow-500 to-rose-400 text-slate-950 rounded-full font-bold shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:scale-105 active:scale-95 transition-all duration-300" id="btn-open">
+        💌 Buka Surat 🤍
+      </button>
+    </div>
+  </div>
+
+  <main id="main-content" class="w-full max-w-md glass-box rounded-3xl p-8 hidden z-30 transition-all duration-500 text-white">
+    
+    <div id="page2" class="space-y-6 hidden">
+      <div class="relative w-32 h-32 mx-auto flex items-center justify-center text-6xl animate-bounce drop-shadow-[0_10px_10px_rgba(245,158,11,0.3)]">💌</div>
+      <h1 class="font-serif-elegant text-3xl font-bold bg-gradient-to-r from-amber-300 via-yellow-400 to-rose-300 bg-clip-text text-transparent">Happy Girlfriend Day 🤍🌻</h1>
+      <p class="text-gray-300 leading-relaxed text-base font-light">Untuk seseorang <br> yang paling aku syukuri di dunia ini.</p>
+      <button onclick="triggerCharacter(this, () => nextPage(2, 3))" class="px-7 py-2.5 bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white rounded-full font-medium transition-all shadow-md shadow-pink-500/20 hover:scale-105 active:scale-95">Lanjut ✨</button>
+    </div>
+
+    <div id="page3" class="space-y-6 hidden">
+      <h2 class="font-serif-elegant text-xl font-bold bg-gradient-to-r from-rose-300 to-amber-300 bg-clip-text text-transparent">10 Hal Yang Aku Suka Dari Kamu ❤️</h2>
+      <div class="min-h-[150px] flex items-center justify-center p-5 bg-slate-900/40 rounded-2xl border border-white/10 shadow-inner">
+        <p id="slide-text" class="text-base text-amber-100 font-medium italic transition-opacity duration-300 leading-relaxed">Loading hal manis...</p>
+      </div>
+      <div class="flex justify-between items-center px-2">
+        <span id="slide-number" class="text-sm font-semibold text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">1 / 10</span>
+        <button id="next-slide-btn" onclick="triggerCharacter(this, () => nextSlide())" class="px-5 py-2 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-slate-950 rounded-full text-sm font-bold transition shadow-md hover:scale-105">Next →</button>
+      </div>
+    </div>
+
+    <div id="page4" class="space-y-6 hidden">
+      <div class="text-5xl animate-spin-slow filter drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]">🌻</div>
+      <div class="space-y-4 text-gray-200 italic leading-relaxed text-base font-serif-elegant">
+        <p>"Kalau suatu hari nanti aku ditanya,"</p>
+        <p class="font-bold text-amber-300 text-lg drop-shadow">"Apa hal terbaik yang pernah terjadi di hidupmu?"</p>
+        <p>Mungkin jawabanku akan selalu sederhana.</p>
+        <p class="text-xl font-bold text-rose-300 drop-shadow">"Aku bertemu kamu."</p>
+      </div>
+      <button onclick="triggerCharacter(this, () => nextPage(4, 5))" class="mt-4 px-6 py-2.5 bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 rounded-full font-bold transition shadow-md hover:scale-105">Lihat Ini Juga 📸</button>
+    </div>
+
+    <div id="page5" class="space-y-6 hidden">
+      <h2 class="font-serif-elegant text-2xl font-bold bg-gradient-to-r from-amber-300 to-rose-300 bg-clip-text text-transparent">Our Moments ✨</h2>
+      <div class="flex flex-col space-y-5 items-center justify-center py-2">
+        <div class="polaroid bg-slate-900/60 p-3 shadow-2xl rounded-xl border border-white/15 w-48 transform -rotate-2 hover:rotate-0 transition duration-300">
+          <img src="assets/images/foto1.jpg" alt="Foto 1" class="w-full h-36 object-cover rounded-lg">
+          <p class="text-center font-serif-elegant text-xs text-amber-200/80 mt-2.5">Senyum terbaikmu 🌻</p>
+        </div>
+        <div class="polaroid bg-slate-900/60 p-3 shadow-2xl rounded-xl border border-white/15 w-48 transform rotate-3 hover:rotate-0 transition duration-300">
+          <img src="assets/images/foto2.jpg" alt="Foto 2" class="w-full h-36 object-cover rounded-lg">
+          <p class="text-center font-serif-elegant text-xs text-amber-200/80 mt-2.5">Chat Favorit Ku✨</p>
+        </div>
+        <div class="polaroid bg-slate-900/60 p-3 shadow-2xl rounded-xl border border-white/15 w-48 transform -rotate-1 hover:rotate-0 transition duration-300">
+          <img src="assets/images/foto3.jpg" alt="Foto 3" class="w-full h-36 object-cover rounded-lg">
+          <p class="text-center font-serif-elegant text-xs text-amber-200/80 mt-2.5">Wallpaper Kesayangan ku 🤍</p>
+        </div>
+      </div>
+      <button onclick="triggerCharacter(this, () => nextPage(5, 6))" class="mt-2 px-6 py-2.5 bg-gradient-to-r from-rose-400 to-pink-500 text-white rounded-full font-medium transition shadow-md hover:scale-105">Terakhir... 💌</button>
+    </div>
+
+    <div id="page6" class="space-y-6 hidden">
+      <h2 class="font-serif-elegant text-2xl font-bold bg-gradient-to-r from-rose-300 via-amber-200 to-yellow-300 bg-clip-text text-transparent">Happy Girlfriend Day Sayang. 🤍🌻</h2>
+      
+      <div class="text-left text-gray-200 text-sm leading-relaxed space-y-3 bg-slate-950/50 p-5 rounded-2xl border border-white/10 max-h-64 overflow-y-auto custom-scroll shadow-inner">
+        <p>Aku mungkin belum bisa memberikan hadiah yang mewah untukmu hari ini.</p>
+        <p>Tapi aku berharap, setiap usaha kecilku, setiap perhatian, dan setiap doa yang kulangitkan, akan menjadi bukti nyata...</p>
+        <p class="font-semibold text-amber-300 drop-shadow-sm">Bahwa aku benar-benar bersyukur dipertemukan dengan kamu.</p>
+        <p>Terima kasih sudah bertahan, menemani, dan menyayangi aku hingga detik ini.</p>
+        <p class="text-right font-serif-elegant font-bold text-rose-300 text-base drop-shadow-sm mt-4">Aku sayang kamu. 🤍🌻</p>
+      </div>
+      
+      <div class="pt-2">
+        <button id="btn-hug" onclick="triggerCharacter(this, () => virtualHug(event))" class="px-8 py-3.5 bg-gradient-to-r from-rose-400 via-pink-500 to-amber-400 text-slate-950 font-black rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all duration-300">Peluk Virtual 🤍</button>
+      </div>
+
+      <div id="hug-result" class="min-h-[60px] flex flex-col items-center justify-center mt-4 px-2">
+        <p id="typing-text" class="text-sm text-amber-200 font-medium italic leading-relaxed text-center drop-shadow-sm"></p>
+        
+        <div id="wa-reply-container" class="mt-4 hidden transition-all duration-500 transform scale-0">
+          <a href="https://wa.me/6282310811414?text=" target="_blank" class="inline-block px-7 py-2.5 bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-500 hover:to-teal-600 text-white rounded-full text-sm font-bold shadow-md transition-all animate-pulse">
+            Balas Surat Ini 💖
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="assets/js/fal.js"></script>
+  
+    <script>
+    // ================= SISTEM INTERAKTIF EMOJI (BISA DIGERAKKAN PAS DITAHAN) =================
+    const char = document.getElementById('helper-character');
+    const emojis = ['😍', '🥰', '😘', '😝', '🥳', '😗', '😉'];
+    const bubbleTexts = ["kejar aku dong", "Pencet dong", "Wlee tangkap dong"];
+    
+    let roamTimeout;
+    let textTimeout;
+    let isInterrupted = false;
+    let isDragging = false;
+    let prevX = 20, prevY = window.innerHeight * 0.75; 
+
+    // Variabel penampung jarak geser (offset)
+    let offsetX = 0;
+    let offsetY = 0;
+
+    // Set ukuran utama awal ideal (2.8rem)
+    char.style.fontSize = '2.8rem';
+
+    function getRandomEmoji() {
+      return emojis[Math.floor(Math.random() * emojis.length)];
+    }
+
+    // Loop Animasi Bayangan Mengikuti Pergerakan Karakter Secara Dinamis
+    function updateFrame() {
+      const currentX = parseFloat(char.style.left) || 20;
+      const currentY = parseFloat(char.style.top) || (window.innerHeight * 0.75);
+
+      const diffX = currentX - prevX;
+      const diffY = currentY - prevY;
+      
+      const shadowX = -diffX * 0.25;
+      const shadowY = 12 - (diffY * 0.2);
+      const blur = Math.min(15, 8 + Math.abs(diffX + diffY) * 0.1);
+      char.style.filter = `drop-shadow(${shadowX}px ${shadowY}px ${blur}px rgba(0, 0, 0, 0.45))`;
+
+      prevX = currentX;
+      prevY = currentY;
+
+      requestAnimationFrame(updateFrame);
+    }
+    requestAnimationFrame(updateFrame);
+
+    // Balon Teks Muncul & Ganti Emoji Sesuai Text Balon
+    function showFloatingText() {
+      if (isInterrupted || !document.getElementById('page6').classList.contains('hidden')) return;
+
+      const oldBubble = document.getElementById('char-bubble');
+      if (oldBubble) oldBubble.remove();
+
+      const text = bubbleTexts[Math.floor(Math.random() * bubbleTexts.length)];
+      
+      if (text === "kejar aku dong") {
+        char.innerHTML = '😝';
+      } else if (text === "Pencet dong") {
+        char.innerHTML = '🥺';
+      } else if (text === "Wlee tangkap dong") {
+        char.innerHTML = '😜';
+      }
+
+      const bubble = document.createElement('div');
+      bubble.id = 'char-bubble';
+      bubble.innerText = text;
+      
+      bubble.style.position = 'absolute';
+      bubble.style.bottom = '115%';
+      bubble.style.left = '50%';
+      bubble.style.transform = 'translateX(-50%)';
+      bubble.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+      bubble.style.color = '#fbbf24';
+      bubble.style.padding = '5px 11px';
+      bubble.style.borderRadius = '12px';
+      bubble.style.fontSize = '0.75rem';
+      bubble.style.fontWeight = 'bold';
+      bubble.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+      bubble.style.whiteSpace = 'nowrap';
+      bubble.style.boxShadow = '0 4px 10px rgba(0,0,0,0.3)';
+      bubble.style.transition = 'opacity 0.4s ease';
+      bubble.style.pointerEvents = 'none';
+      bubble.style.zIndex = '120';
+
+      char.appendChild(bubble);
+
+      setTimeout(() => { if (bubble) bubble.style.opacity = '0'; }, 2000);
+      setTimeout(() => { if (bubble) bubble.remove(); }, 2400);
+
+      clearTimeout(textTimeout);
+      textTimeout = setTimeout(showFloatingText, 5000);
+    }
+
+    // Melayang acak dinamis keliling layar
+    function startRandomRoaming() {
+      if (isInterrupted || isDragging || !document.getElementById('page6').classList.contains('hidden')) return;
+
+      const targetX = Math.random() * (window.innerWidth - 140) + 70;
+      const targetY = Math.random() * (window.innerHeight - 140) + 70;
+
+      char.style.transition = 'all 3.4s cubic-bezier(0.42, 0, 0.48, 1.4)'; 
+      char.style.left = `${targetX}px`;
+      char.style.top = `${targetY}px`;
+      
+      const randomAngle = (Math.random() - 0.5) * 50; 
+      char.style.transform = `rotate(${randomAngle}deg)`;
+
+      if (Math.random() > 0.5) char.innerHTML = getRandomEmoji();
+
+      clearTimeout(roamTimeout);
+      roamTimeout = setTimeout(startRandomRoaming, 3600);
+    }
+
+    char.style.animation = 'none';
+    setTimeout(startRandomRoaming, 500);
+    setTimeout(showFloatingText, 2500);
+
+    // KETIKA EMOJI DITAHAN (POINTER DOWN) -> MEMBESAR, JADI KAGET, & AKTIFKAN DRAG
+    char.addEventListener('pointerdown', (e) => {
+      isInterrupted = true;
+      isDragging = true;
+      clearTimeout(roamTimeout);
+      
+      const currentBubble = document.getElementById('char-bubble');
+      if (currentBubble) currentBubble.remove();
+      
+      // Hitung posisi relatif sentuhan terhadap emoji agar gerakan mulus tidak melompat
+      offsetX = e.clientX - char.getBoundingClientRect().left;
+      offsetY = e.clientY - char.getBoundingClientRect().top;
+      
+      char.innerHTML = '😣';
+      char.style.transition = 'transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+      char.style.transform = 'scale(1.5) rotate(0deg)';
+      
+      // Set pointer capture agar gerakan tetap terdeteksi meski jari keluar dari area emoji
+      char.setPointerCapture(e.pointerId);
+    });
+
+    // KETIKA SENDA PINTER BERGERAK (POINTER MOVE) -> IKUTI POINTER JIKA SEDANG DRAGGING
+    char.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      
+      // Update posisi langsung mengikuti koordinat pointer secara realtime
+      const x = e.clientX - offsetX;
+      const y = e.clientY - offsetY;
+      
+      char.style.transition = 'none'; // Matikan transisi biar responsif tanpa delay
+      char.style.left = `${x}px`;
+      char.style.top = `${y}px`;
+    });
+
+    // KETIKA LEPAS SENTUHAN (POINTER UP / CANCEL) -> BARU MELESAT KABUR DENGAN CEPAT
+    char.addEventListener('pointerup', (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      char.releasePointerCapture(e.pointerId);
+
+      if (char.innerHTML === '👉' || !document.getElementById('page6').classList.contains('hidden')) return;
+
+      createCharHearts(e.clientX, e.clientY);
+      char.innerHTML = '😜'; // Muka ngejek pas kabur
+
+      const escapeX = Math.random() * (window.innerWidth - 140) + 70;
+      const escapeY = Math.random() * (window.innerHeight - 140) + 70;
+      
+      // Animasi transisi melesat kabur
+      char.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+      char.style.left = `${escapeX}px`;
+      char.style.top = `${escapeY}px`;
+      char.style.transform = 'scale(1) rotate(0deg)';
+      
+      // Kembalikan ke mode roaming santai setelah selesai menghindar
+      setTimeout(() => {
+        if (!document.getElementById('page6').classList.contains('hidden') || isDragging) return;
+        char.innerHTML = getRandomEmoji();
+        isInterrupted = false;
+        startRandomRoaming();
+        showFloatingText();
+      }, 900);
+    });
+
+    function createCharHearts(x, y) {
+      for (let i = 0; i < 6; i++) {
+        const h = document.createElement('div');
+        h.className = 'char-heart';
+        h.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+        h.style.left = `${char.offsetLeft + 20}px`;
+        h.style.top = `${char.offsetTop + 10}px`;
+        h.style.setProperty('--mx', `${(Math.random() - 0.5) * 80}px`);
+        h.style.setProperty('--my', `${(Math.random() - 0.5) * 80}px`);
+        document.body.appendChild(h);
+        setTimeout(() => h.remove(), 800);
+      }
+    }
+
+    // KETIKA PENCET TOMBOL NGE-LINK KE AKSI HALAMAN
+    function triggerCharacter(buttonEl, callbackAction) {
+      if (isDragging) return;
+      isInterrupted = true; 
+      clearTimeout(roamTimeout);
+      clearTimeout(textTimeout);
+      
+      const currentBubble = document.getElementById('char-bubble');
+      if (currentBubble) currentBubble.remove();
+      
+      const rect = buttonEl.getBoundingClientRect();
+      
+      char.style.transition = 'all 0.45s cubic-bezier(0.25, 1, 0.5, 1.2)';
+      char.style.left = `${rect.left + rect.width / 2 - 20}px`;
+      char.style.top = `${rect.top - 50}px`;
+      char.style.transform = 'rotate(0deg)';
+      char.innerHTML = '👉';
+
+      setTimeout(() => {
+        char.classList.add('char-jump');
+        createCharHearts(rect.left + rect.width / 2, rect.top);
+      }, 400);
+
+      setTimeout(() => {
+        char.classList.remove('char-jump');
+        callbackAction();
+        char.innerHTML = getRandomEmoji();
+
+        if (document.getElementById('page6').classList.contains('hidden')) {
+          isInterrupted = false;
+          setTimeout(startRandomRoaming, 300);
+          setTimeout(showFloatingText, 2000);
+        }
+      }, 750);
+    }
+
+        // KETIKA PENCET TOMBOL -> EMOJI KE TENGAH TOMBOL, MENGECIL (IKUT TEKAN), BILANG UHUY, LALU KABUR
+    function triggerCharacter(buttonEl, callbackAction) {
+      if (isDragging) return;
+      isInterrupted = true; 
+      clearTimeout(roamTimeout);
+      clearTimeout(textTimeout);
+      
+      const currentBubble = document.getElementById('char-bubble');
+      if (currentBubble) currentBubble.remove();
+      
+      // Hitung koordinat tepat di tengah tombol
+      const rect = buttonEl.getBoundingClientRect();
+      const targetX = rect.left + (rect.width / 2) - (char.offsetWidth / 2);
+      const targetY = rect.top + (rect.height / 2) - (char.offsetHeight / 2);
+      
+      // Pergi tepat ke tengah tombol
+      char.style.transition = 'all 0.4s cubic-bezier(0.25, 1, 0.5, 1.2)';
+      char.style.left = `${targetX}px`;
+      char.style.top = `${targetY}px`;
+      char.style.transform = 'rotate(0deg) scale(1)'; // Mendarat dulu dengan ukuran normal
+      char.innerHTML = '☝'; 
+
+      setTimeout(() => {
+        // Efek IKUT MENEKAN -> Karakter mengecil (scale 0.6) dan animasi melompat kecil
+        char.style.transition = 'transform 0.1s ease-out';
+        char.style.transform = 'scale(0.6) rotate(0deg)'; 
+        char.classList.add('char-jump');
+        
+        createCharHearts(rect.left + rect.width / 2, rect.top + rect.height / 2);
+        
+        // Munculkan teks balon "uhuy"
+        const bubble = document.createElement('div');
+        bubble.id = 'char-bubble';
+        bubble.innerText = "uhuy";
+        bubble.style.position = 'absolute';
+        bubble.style.bottom = '115%';
+        bubble.style.left = '50%';
+        bubble.style.transform = 'translateX(-50%)';
+        bubble.style.backgroundColor = 'rgba(15, 23, 42, 0.9)';
+        bubble.style.color = '#fbbf24';
+        bubble.style.padding = '4px 10px';
+        bubble.style.borderRadius = '10px';
+        bubble.style.fontSize = '0.75rem';
+        bubble.style.fontWeight = 'bold';
+        bubble.style.border = '1px solid rgba(245, 158, 11, 0.4)';
+        bubble.style.zIndex = '120';
+        char.appendChild(bubble);
+      }, 400);
+
+      // Eksekusi perpindahan halaman & emoji langsung kabur
+      setTimeout(() => {
+        char.classList.remove('char-jump');
+        callbackAction(); // Pindah halaman
+        
+        // Hapus balon "uhuy" sebelum kabur
+        const oldBubble = document.getElementById('char-bubble');
+        if (oldBubble) oldBubble.remove();
+
+        // Mode menghindar/kabur -> Ukuran kembali normal (scale 1) dan berubah muka ngejek
+        char.innerHTML = '😜';
+        const escapeX = Math.random() * (window.innerWidth - 140) + 70;
+        const escapeY = Math.random() * (window.innerHeight - 140) + 70;
+        
+        char.style.transition = 'all 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+        char.style.left = `${escapeX}px`;
+        char.style.top = `${escapeY}px`;
+        char.style.transform = 'scale(1) rotate(0deg)';
+
+        // Aktifkan kembali roaming otomatis jika belum di halaman akhir (Page 6)
+        setTimeout(() => {
+          if (!document.getElementById('page6').classList.contains('hidden') || isDragging) return;
+          char.innerHTML = getRandomEmoji();
+          isInterrupted = false;
+          startRandomRoaming();
+          showFloatingText();
+        }, 900);
+
+      }, 950); 
+    }
+
+
+    // ================= LOGIKA UTAMA WEBPAGE =================
+    function startJourney() {
+      const bgMusic = document.getElementById('bgMusic');
+      bgMusic.play().catch(e => console.log("Music blocked."));
+      
+      const p1 = document.getElementById('page1');
+      p1.style.opacity = '0';
+      setTimeout(() => {
+        p1.classList.add('hidden');
+        const main = document.getElementById('main-content');
+        main.classList.remove('hidden');
+        main.classList.add('fade-in');
+        document.getElementById('page2').classList.remove('hidden');
+      }, 1000);
+    }
+
+    function nextPage(from, to) {
+      document.getElementById(`page${from}`).classList.add('hidden');
+      const toPage = document.getElementById(`page${to}`);
+      toPage.classList.remove('hidden');
+      toPage.classList.add('fade-in');
+      
+      if (to === 6) {
+        isInterrupted = true; 
+        clearTimeout(roamTimeout);
+        clearTimeout(textTimeout);
+        const currentBubble = document.getElementById('char-bubble');
+        if (currentBubble) currentBubble.remove();
+
+        setTimeout(() => {
+          char.style.transition = 'all 1.3s ease-in-out';
+          char.style.left = 'calc(50% - 22px)'; 
+          char.style.top = '10px';
+          char.style.transform = 'rotate(0deg)';
+          setTimeout(() => { 
+            char.innerHTML = '🫴🌻'; 
+            char.style.transition = 'none';
+            char.style.animation = 'floatAnimation 3s ease-in-out infinite';
+          }, 1100);
+        }, 300);
+      }
+    }
+
+    function virtualHug(event) {
+      if (typeof createHeart === "function") {
+        for (let i = 0; i < 30; i++) { createHeart(window.innerWidth / 2, window.innerHeight / 2); }
+      }
+      document.getElementById('btn-hug').style.display = 'none';
+
+      const pesanBaru = "Kalau suatu hari nanti kita lagi capek, lagi marah, atau lagi sama-sama sibuk... semoga kita ingat kalau website ini pernah dibuat karena aku benar-benar bersyukur pernah dipertemukan sama kamu. Selamat Hari Girlfriend, Princess. Aku sayang kamu. 🤍🌻";
+      typeWriterCustom(pesanBaru, 0);
+    }
+
+    function typeWriterCustom(text, i) {
+      if (i < text.length) {
+        document.getElementById("typing-text").innerHTML += text.charAt(i);
+        setTimeout(() => typeWriterCustom(text, i + 1), 50);
+      } else {
+        const waBtn = document.getElementById("wa-reply-container");
+        waBtn.classList.remove("hidden");
+        setTimeout(() => {
+          waBtn.classList.remove("scale-0");
+          waBtn.classList.add("scale-105");
+        }, 300);
+      }
+    }
+  </script>
+</body>
+</html>
